@@ -5,33 +5,24 @@ namespace Github
 {
     class Program
     {
-        static void Main(string[] args)
+        static int[] GetArrayWithRandomValues(int from, int to, int length)
         {
-            Console.WriteLine("1.Создать массив на N элементов, где N указывается с консольной строки.\nЗаполнить его случайными числами от 1 до 26 включительно. ");
-
-            Console.WriteLine();
-
-            Console.Write("Please, enter the length of the array: ");
-            int length = int.Parse(Console.ReadLine());
             int[] array = new int[length];
             Random rand = new Random();
 
-            Console.WriteLine();
-
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = rand.Next(1, 26);
+                array[i] = rand.Next(from, to);
                 Console.WriteLine($"Array: {array[i]}");
             }
 
-            Console.WriteLine();
+            return array;
+        }
 
-            Console.WriteLine("2.Создать 2 массива, где в 1 массиве будут значение только четных значений, а во втором нечетных.");
-
-            Console.WriteLine();
-
-            char[] arrayEven = new char[0];
-            char[] arrayOdd = new char[0];
+        static void GetTwoArrays(int[] array, out char[] arrayEven, out char[] arrayOdd)
+        {
+            arrayEven = new char[0];
+            arrayOdd = new char[0];
 
             for (int i = 0; i < array.Length; i++)
             {
@@ -48,85 +39,46 @@ namespace Github
                     Console.WriteLine($"Element odd: {array[i]}");
                 }
             }
+        }
 
-            Console.WriteLine();
-
-            Console.WriteLine("3.Заменить числа в 1 и 2 массиве на буквы английского алфавита.Значения ячеек этих массивов равны порядковому номеру каждой буквы.\nЕсли же буква является одной из списка (a, e, i, d, h, j) то она должна быть в верхнем регистре.");
-
-            Console.WriteLine();
-
+        static void ReplaceNumbersToLettersAndUpperSpecialChar(char[] array)
+        {
             string lettersString = "abcdefghijklmnopqrstuvwxyz";
 
             string specialStrings = "aeidhj";
 
-            for (int i = 0; i < arrayEven.Length; i++)
+            for (int i = 0; i < array.Length; i++)
             {
-                var currentElement = arrayEven[i];
+                var currentElement = array[i];
                 var character = lettersString[Convert.ToInt32(currentElement) - 1];
 
                 if (specialStrings.Contains(character))
                 {
-                    arrayEven[i] = char.ToUpper(character);
+                    array[i] = char.ToUpper(character);
                 }
                 else
                 {
-                    arrayEven[i] = character;
+                    array[i] = character;
                 }
             }
+        }
 
-            for (int i = 0; i < arrayEven.Length; i++)
+        static int СountUppercaseLatters(char[] array)
+        {
+            int count = 0;
+            for (int i = 0; i < array.Length; i++)
             {
-                Console.WriteLine($"Letters for even: {arrayEven[i]}");
-            }
-
-            Console.WriteLine();
-
-            for (int i = 0; i < arrayOdd.Length; i++)
-            {
-                var currentElement = arrayOdd[i];
-                var character = lettersString[Convert.ToInt32(currentElement) - 1];
-
-                if (specialStrings.Contains(character))
+                if (char.IsUpper(array[i]))
                 {
-                    arrayOdd[i] = char.ToUpper(character);
-                }
-                else
-                {
-                    arrayOdd[i] = character;
+                    count++;
                 }
             }
 
-            for (int i = 0; i < arrayOdd.Length; i++)
-            {
-                Console.WriteLine($"Letters for odd: {arrayOdd[i]}");
-            }
+            return count;
+        }
 
-            Console.WriteLine();
-
-            Console.WriteLine("4.Вывести на экран результат того, в каком из массивов будет больше букв в верхнем регистре.");
-
-            Console.WriteLine();
-
-            int countEven = 0, countOdd = 0;
-
-            for (int i = 0; i < arrayEven.Length; i++)
-            {
-                if (char.IsUpper(arrayEven[i]))
-                {
-                    countEven++;
-                }
-            }
-
-            for (int i = 0; i < arrayOdd.Length; i++)
-            {
-                if (char.IsUpper(arrayOdd[i]))
-                {
-                    countOdd++;
-                }
-            }
-
-            Console.WriteLine();
-
+        static void DisplayWhichArrayMoreUppercaseLetters(char[] arrayEven, char[] arrayOdd, int countEven, int countOdd)
+        {
             if (countEven > countOdd)
             {
                 for (int i = 0; i < arrayEven.Length; i++)
@@ -141,32 +93,87 @@ namespace Github
                     Console.WriteLine($"More uppercase letters in 2 array {arrayOdd[i]}");
                 }
             }
+        }
 
-            Console.WriteLine();
-
-            Console.WriteLine("5.Вывести оба массива на экран.Каждый из массивов должен быть выведен 1 строкой, где его значения будут разделены пробелом.");
-
-            Console.WriteLine();
-
+        static void DisplayArraysByASpase(char[] array)
+        {
             StringBuilder newWord = new StringBuilder();
 
-            for (int i = 0; i < arrayEven.Length; i++)
+            for (int i = 0; i < array.Length; i++)
             {
-                newWord.Append($"{arrayEven[i]} ");
+                newWord.Append($"{array[i]} ");
             }
 
             Console.WriteLine($"1 array: {newWord.ToString()}");
+        }
+
+        static void Main(string[] args)
+        {
+            Console.WriteLine("1.Create an array with N elements, where N is specified from the console line.\nFill it with random numbers from 1 to 26 inclusive. ");
 
             Console.WriteLine();
 
-            StringBuilder newWords = new StringBuilder();
+            Console.Write("Please, enter the length of the array: ");
+
+            int length = int.Parse(Console.ReadLine());
+
+            int[] array = GetArrayWithRandomValues(1, 26, length);
+
+            Console.WriteLine();
+
+            Console.WriteLine("2.Create 2 arrays, where in 1 array there will be only even values, and in the second - odd.");
+
+            Console.WriteLine();
+
+            GetTwoArrays(array, out var arrayEven, out var arrayOdd);
+
+            Console.WriteLine();
+
+            Console.WriteLine("3.Replace numbers in arrays 1 and 2 with letters of the English alphabet. The cell values of these arrays are equal to the serial number of each letter.\nIf the letter is one of the list (a, e, i, d, h, j), then it must be in uppercase .");
+
+            Console.WriteLine();
+
+            ReplaceNumbersToLettersAndUpperSpecialChar(arrayEven);
+
+            for (int i = 0; i < arrayEven.Length; i++)
+            {
+                Console.WriteLine($"Letters for even: {arrayEven[i]}");
+            }
+
+            ReplaceNumbersToLettersAndUpperSpecialChar(arrayOdd);
+
+            Console.WriteLine();
 
             for (int i = 0; i < arrayOdd.Length; i++)
             {
-                newWords.Append($"{arrayOdd[i]} ");
+                Console.WriteLine($"Letters for even: {arrayOdd[i]}");
             }
 
-            Console.WriteLine($"2 array: {newWords.ToString()}");
+            Console.WriteLine();
+
+            Console.WriteLine("4.Display the result of which array contains more uppercase letters.");
+
+            Console.WriteLine();
+
+            int countEven = 0, countOdd = 0;
+
+            countEven = СountUppercaseLatters(arrayEven);
+
+            countOdd = СountUppercaseLatters(arrayOdd);
+
+            Console.WriteLine();
+
+            DisplayWhichArrayMoreUppercaseLetters(arrayEven, arrayOdd, countEven, countOdd);
+
+            Console.WriteLine();
+
+            Console.WriteLine("5.Display both arrays on the screen. Each of the arrays must be displayed on 1 line, where its values are separated by a space.");
+
+            Console.WriteLine();
+
+            DisplayArraysByASpase(arrayEven);
+
+            DisplayArraysByASpase(arrayOdd);
         }
     }
 }
